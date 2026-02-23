@@ -204,9 +204,14 @@ The main business tool:
 You shared UI screenshots during development. To make them appear in GitHub README, add them to the repo (for example under `docs/screenshots/`) and reference them like this:
 
 ```md
-![Parallel swim lanes](docs/screenshots/parallel-swim-lanes.png)
-![Generated code + outputs](docs/screenshots/generated-code-and-output.png)
+![Parallel swim lanes](docs/screenshots/parallel-swim-lanes.jpeg)
+![Generated code + outputs](docs/screenshots/generated-code-and-output.jpeg)
 ```
+
+Embedded screenshots (if the files exist in `docs/screenshots/`):
+
+![Parallel swim lanes](docs/screenshots/parallel-swim-lanes.jpeg)
+![Generated code + outputs](docs/screenshots/generated-code-and-output.jpeg)
 
 Suggested screenshots to include:
 
