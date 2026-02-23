@@ -1,0 +1,5 @@
+flask>=3.0,<4
+langchain>=0.3,<0.4
+langgraph>=0.2,<0.4
+langchain-anthropic>=0.2,<0.4
+anthropic>=0.40

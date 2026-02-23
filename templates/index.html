@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Programmatic Tool Calling Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow glow-a"></div>
+    <div class="bg-glow glow-b"></div>
+
+    <main class="app-shell">
+      <header class="hero glass">
+        <div>
+          <p class="eyebrow">Interactive Learning Lab</p>
+          <h1>Programmatic Tool Calling: 3 Execution Styles</h1>
+          <p class="subtle">
+            Compare LangGraph local execution, LangGraph + Anthropic managed sandbox, and a traditional non-tool-calling flow.
+          </p>
+        </div>
+        <div class="hero-badges">
+          <span class="badge">Healthcare RCM</span>
+          <span class="badge">Claude + Anthropic API</span>
+          <span class="badge">LangGraph Orchestration</span>
+        </div>
+      </header>
+
+      <section class="controls glass">
+        <div class="control-row">
+          <label for="modelInput">Model</label>
+          <input id="modelInput" type="text" placeholder="claude-sonnet-4-5" />
+          <button id="runLocalBtn" class="btn btn-primary">Run Local (LangGraph)</button>
+          <button id="runSandboxBtn" class="btn btn-secondary">Run Sandbox (LangGraph)</button>
+          <button id="runTraditionalBtn" class="btn btn-tertiary">Run Traditional</button>
+        </div>
+        <div class="control-row-wide">
+          <button id="runAllBtn" class="btn btn-all">Run All 3 (Parallel Comparison)</button>
+        </div>
+        <div class="legend">
+          <div><span class="dot local"></span> Local: Claude writes Python, host executes locally</div>
+          <div><span class="dot sandbox"></span> Sandbox: Claude code runs remotely, host returns tool results</div>
+          <div><span class="dot traditional"></span> Traditional: host fetches data, Claude summarizes directly</div>
+        </div>
+      </section>
+
+      <section class="comparison-board glass">
+        <div class="panel-title-row">
+          <h2>Parallel Swim Lanes</h2>
+          <span class="pill">Side-by-side comparison</span>
+        </div>
+        <div class="swimlane-grid">
+          <section class="swimlane local-lane" data-lane="local_langgraph">
+            <div class="swimlane-head">
+              <h3>Local (LangGraph)</h3>
+              <span id="lane-local-status" class="pill neutral">Idle</span>
+            </div>
+            <div class="swimlane-metrics">
+              <div><span>Duration</span><strong id="lane-local-duration">-</strong></div>
+              <div><span>Tokens</span><strong id="lane-local-tokens">-</strong></div>
+            </div>
+            <div id="lane-local-prompt-preview" class="lane-prompt-preview">Prompt: No run yet.</div>
+            <details class="lane-section" data-sync="prompt">
+              <summary>Prompt Used</summary>
+              <pre id="lane-local-prompt" class="code-box lane-box">No run yet.</pre>
+            </details>
+            <details class="lane-section" data-sync="snippet">
+              <summary>Integration Snippet (Python)</summary>
+              <pre id="lane-local-snippet" class="code-box lane-box">No run yet.</pre>
+            </details>
+            <details class="lane-section" data-sync="generated-code" open>
+              <summary>Generated Code</summary>
+              <pre id="lane-local-code" class="code-box lane-box">No run yet.</pre>
+            </details>
+            <details class="lane-section" data-sync="final-output" open>
+              <summary>Final Output</summary>
+              <pre id="lane-local-final" class="code-box lane-box">No run yet.</pre>
+            </details>
+            <details class="lane-section" data-sync="logs" open>
+              <summary>Logs</summary>
+              <div id="lane-local-logs" class="log-stream lane-logs"></div>
+            </details>
+            <details class="lane-section" data-sync="llm-transcript">
+              <summary>LLM Conversation Timeline (TX/RX)</summary>
+              <pre id="lane-local-transcript" class="code-box lane-box transcript-box">No transcript yet.</pre>
+            </details>
+          </section>
+
+          <section class="swimlane sandbox-lane" data-lane="sandbox_langgraph">
+            <div class="swimlane-head">
+              <h3>Sandbox (LangGraph)</h3>
+              <span id="lane-sandbox-status" class="pill neutral">Idle</span>
+            </div>
+            <div class="swimlane-metrics">
+              <div><span>Duration</span><strong id="lane-sandbox-duration">-</strong></div>
+              <div><span>Tokens</span><strong id="lane-sandbox-tokens">-</strong></div>
+            </div>
+            <div id="lane-sandbox-prompt-preview" class="lane-prompt-preview">Prompt: No run yet.</div>
+            <details class="lane-section" data-sync="prompt">
+              <summary>Prompt Used</summary>
+              <pre id="lane-sandbox-prompt" class="code-box lane-box">No run yet.</pre>
+            </details>
+            <details class="lane-section" data-sync="snippet">
+              <summary>Integration Snippet (Python)</summary>
+              <pre id="lane-sandbox-snippet" class="code-box lane-box">No run yet.</pre>
+            </details>
+            <details class="lane-section" data-sync="generated-code" open>
+              <summary>Generated Code</summary>
+              <pre id="lane-sandbox-code" class="code-box lane-box">No run yet.</pre>
+            </details>
+            <details class="lane-section" data-sync="final-output" open>
+              <summary>Final Output</summary>
+              <pre id="lane-sandbox-final" class="code-box lane-box">No run yet.</pre>
+            </details>
+            <details class="lane-section" data-sync="logs" open>
+              <summary>Logs</summary>
+              <div id="lane-sandbox-logs" class="log-stream lane-logs"></div>
+            </details>
+            <details class="lane-section" data-sync="llm-transcript">
+              <summary>LLM Conversation Timeline (TX/RX)</summary>
+              <pre id="lane-sandbox-transcript" class="code-box lane-box transcript-box">No transcript yet.</pre>
+            </details>
+          </section>
+
+          <section class="swimlane traditional-lane" data-lane="traditional">
+            <div class="swimlane-head">
+              <h3>Traditional</h3>
+              <span id="lane-traditional-status" class="pill neutral">Idle</span>
+            </div>
+            <div class="swimlane-metrics">
+              <div><span>Duration</span><strong id="lane-traditional-duration">-</strong></div>
+              <div><span>Tokens</span><strong id="lane-traditional-tokens">-</strong></div>
+            </div>
+            <div id="lane-traditional-prompt-preview" class="lane-prompt-preview">Prompt: No run yet.</div>
+            <details class="lane-section" data-sync="prompt">
+              <summary>Prompt Used</summary>
+              <pre id="lane-traditional-prompt" class="code-box lane-box">No run yet.</pre>
+            </details>
+            <details class="lane-section" data-sync="snippet">
+              <summary>Integration Snippet (Python)</summary>
+              <pre id="lane-traditional-snippet" class="code-box lane-box">No run yet.</pre>
+            </details>
+            <details class="lane-section" data-sync="generated-code" open>
+              <summary>Generated Code</summary>
+              <pre id="lane-traditional-code" class="code-box lane-box">N/A</pre>
+            </details>
+            <details class="lane-section" data-sync="final-output" open>
+              <summary>Final Output</summary>
+              <pre id="lane-traditional-final" class="code-box lane-box">No run yet.</pre>
+            </details>
+            <details class="lane-section" data-sync="logs" open>
+              <summary>Logs</summary>
+              <div id="lane-traditional-logs" class="log-stream lane-logs"></div>
+            </details>
+            <details class="lane-section" data-sync="llm-transcript">
+              <summary>LLM Conversation Timeline (TX/RX)</summary>
+              <pre id="lane-traditional-transcript" class="code-box lane-box transcript-box">No transcript yet.</pre>
+            </details>
+          </section>
+        </div>
+      </section>
+
+      <section class="dashboard">
+        <section class="panel glass">
+          <div class="panel-title-row">
+            <h2>Run Summary</h2>
+            <span id="statusPill" class="pill neutral">Idle</span>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-label">Mode</div>
+              <div id="metricMode" class="metric-value">-</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Duration</div>
+              <div id="metricDuration" class="metric-value">-</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Model</div>
+              <div id="metricModel" class="metric-value">-</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Total Tokens</div>
+              <div id="metricTokens" class="metric-value">-</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Container</div>
+              <div id="metricContainer" class="metric-value small">-</div>
+            </div>
+          </div>
+          <div class="usage-grid">
+            <div class="usage-card">
+              <h3>Token Usage</h3>
+              <pre id="tokenUsage" class="code-box">No run yet.</pre>
+            </div>
+            <div class="usage-card">
+              <h3>Metadata</h3>
+              <pre id="metadataBox" class="code-box">No run yet.</pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel glass">
+          <div class="panel-title-row">
+            <h2>Generated Python Code</h2>
+            <span class="pill">Visible when applicable</span>
+          </div>
+          <pre id="generatedCode" class="code-box tall">No generated code yet.</pre>
+        </section>
+
+        <section class="panel glass">
+          <div class="panel-title-row">
+            <h2>Logs</h2>
+            <button id="clearLogsBtn" class="btn btn-ghost btn-small">Clear</button>
+          </div>
+          <div id="logStream" class="log-stream"></div>
+        </section>
+
+        <section class="panel glass">
+          <div class="panel-title-row">
+            <h2>Final Assistant Output</h2>
+          </div>
+          <pre id="finalText" class="code-box tall">No final output yet.</pre>
+        </section>
+      </section>
+    </main>
+
+    <div id="modalOverlay" class="modal-overlay hidden" aria-hidden="true">
+      <div class="modal-shell glass" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-head">
+          <h2 id="modalTitle">Expanded View</h2>
+          <button id="modalCloseBtn" class="btn btn-ghost btn-small" type="button">Close</button>
+        </div>
+        <div id="modalContent" class="code-box modal-content"></div>
+      </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
